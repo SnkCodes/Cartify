@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cartify</title>
+  <title>Parana</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,7 +17,7 @@
 </head>
 
 <body>
-  <header id="header">
+  <header>
     <a href="#">Home</a>
     <a href="#pro_list" class="resp-hide">Products</a>
     <select class="resp-show">
@@ -25,8 +25,9 @@
       <option name="Categories">Categories</option>
     </select>
     <div style="display: flex; height: 40px">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 23vw" />
-      <button class="btn btn-outline-success btn-light search_but" type="submit">
+      <input id="search-bar" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+        style="width: 23vw" />
+      <button class="btn btn-outline-success btn-light search-button" type="submit">
         Go
       </button>
     </div>
@@ -42,27 +43,33 @@
     </div>
   </header>
   <main id="main">
-    <div id="Featured_product_div">
-      <p class="heading-in-page">Hostel Essentials</p>
+    <div id="featured-products-div">
+      <p class="heading-in-page">Featured Products</p>
       <div>
         <div id="The_features">
-          <div class="Featured-item">
-            <img src="Images/Headphones.png" alt="Image error" class="featured_image" />
-            <p class="Feat_name">Headphones</p>
-            <p class="Feat_price">₹ 10000</p>
-            <a href="#products-list-section"><button class="btn btn-primary Feat_but">Go to item</button></a>
+          <div class="featured-item">
+            <img src="Images/Headphones.png" alt="Image error" class="featured-images" />
+            <p class="feature-item-name"></p>
+            <p class="Feat_price"></p>
+            <a href="#products-list-section"><button class="btn btn-primary feat-button">
+                Go to item
+              </button></a>
           </div>
-          <div class="Featured-item">
-            <img src="Images/Final_coffee.png" alt="Image error" class="featured_image" />
-            <p class="Feat_name">Coffee jar</p>
-            <p class="Feat_price">₹ 400</p>
-            <a href="#products-list-section"><button class="btn btn-primary Feat_but">Go to item</button></a>
+          <div class="featured-item">
+            <img src="Images/Final_coffee.png" alt="Image error" class="featured-images" />
+            <p class="feature-item-name"></p>
+            <p class="Feat_price"></p>
+            <a href="#products-list-section"><button class="btn btn-primary feat-button">
+                Go to item
+              </button></a>
           </div>
-          <div class="Featured-item">
-            <img src="Images/clock.jpg" alt="Image error" class="featured_image" />
-            <p class="Feat_name">Clock</p>
-            <p class="Feat_price">₹ 2000</p>
-            <a href="#products-list-section"><button class="btn btn-primary Feat_but">Go to item</button></a>
+          <div class="featured-item">
+            <img src="Images/clock.jpg" alt="Image error" class="featured-images" />
+            <p class="feature-item-name"></p>
+            <p class="Feat_price"></p>
+            <a href="#products-list-section"><button class="btn btn-primary feat-button">
+                Go to item
+              </button></a>
           </div>
         </div>
       </div>
@@ -120,12 +127,12 @@
       <div id="back_to_top_div">Back to top</div>
     </a>
     <div id="footer_info">
-      <p>&copy Sounak Sau</p>
+      <p>&copy Sanidhya Dobhal</p>
       <div>
         <p>Contact:</p>
         <ul style="padding-left: 0px">
-          <li>Email: sausounak4@gmail.com</li>
-          <li>Phone number: 7044281841</li>
+          <li>Email: sanidhyadobhal2002@gmail.com</li>
+          <li>Phone number: 9234567891</li>
         </ul>
       </div>
     </div>
@@ -135,6 +142,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
   <script src="shopping.js"></script>
+  <script src="itemRetrival.js"></script>
 </body>
 
 </html>

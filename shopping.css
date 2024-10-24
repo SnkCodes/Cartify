@@ -1,12 +1,18 @@
+:root {
+  --backgroundGray: #323232;
+}
+
 * {
   margin: 0px;
   overflow-x: hidden;
 }
+
 footer a {
   color: white;
   text-decoration: none;
   transition-duration: 0.3s;
 }
+
 .heading-in-page {
   background-color: rgb(15, 20, 26);
   color: rgb(219, 241, 22);
@@ -16,26 +22,21 @@ footer a {
   font-size: 25px;
   margin-top: 15px;
 }
-#Featured_product_div {
-  margin-top: 60px;
-  background-image: linear-gradient(
-    to right,
-    rgb(0, 255, 251),
-    rgb(255, 196, 0)
-  );
+
+#featured-products-div {
+  background-image: linear-gradient(to right,
+      rgb(0, 255, 251),
+      rgb(255, 196, 0));
   padding-bottom: 30px;
 }
+
 .item-buttons-in-product-list {
   width: 164px;
   margin-bottom: 8px;
   margin-left: auto;
   margin-right: auto;
 }
-.Feat_but {
-  display: block;
-  margin-left: 25px;
-  margin-bottom: 25px;
-}
+
 #The_features {
   width: 80vw;
   margin: auto;
@@ -44,34 +45,49 @@ footer a {
   justify-content: space-around;
   transition-property: width;
   transition-duration: 0.2s;
+  min-height: 330px;
 }
-.Featured-item {
+
+.featured-item {
   width: 300px;
   background-color: #535353;
   color: white;
   border: 2px solid #7c7c7c;
 }
-.featured_image {
+
+.featured-images {
   display: block;
   margin: 8px auto;
   width: 250px;
   height: 163px;
+  visibility: hidden;
 }
-.Feat_name {
+
+.feature-item-name {
   margin: 10px;
   font-size: 17px;
   margin-left: 25px;
 }
+
 .Feat_price {
   font-size: 20px;
   font-weight: 600;
   margin-left: 25px;
 }
+
+.feat-button {
+  display: block;
+  margin-left: 25px;
+  margin-bottom: 25px;
+  visibility: hidden;
+}
+
 #categories-and-prod-list {
-  background-color: #404040;
+  background-color: var(--backgroundGray);
   color: white;
   padding-bottom: 50px;
 }
+
 .categories_prod_list {
   background-color: rgb(15, 20, 26);
   width: 150px;
@@ -82,6 +98,7 @@ footer a {
   margin-top: 20px;
   padding-left: 15px;
 }
+
 #all_categories_cont {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -90,22 +107,26 @@ footer a {
   transition-property: width;
   transition-duration: 0.2s;
 }
+
 .cart_item_cls {
   border: 4px outset;
   width: 11.1vw;
   margin-top: 10px;
 }
+
 #all_categories_cont div:nth-child(1) {
   grid-column: 1/3;
   background-size: contain;
   width: 46.6vw;
 }
+
 .cart_item_cls img {
   width: 11.1vw;
 }
+
 #all_categories_cont div {
   border: 2px solid #7c7c7c;
-  background-color: #5c5c5c;
+  background-color: #535353;
   display: flex;
   margin: auto;
   margin-bottom: 20px;
@@ -115,6 +136,7 @@ footer a {
   transition-property: width;
   transition-duration: 0.2s;
 }
+
 #all_categories_cont div p {
   display: grid;
   align-items: center;
@@ -122,17 +144,21 @@ footer a {
   width: 125px;
   margin: auto;
 }
+
 #all_categories_cont div:nth-child(1) p {
   /*This is for the electronics text*/
   width: 250px;
 }
+
 .cat_img {
   width: 200px;
   height: 200px;
 }
+
 #tech_img {
   width: 400px;
 }
+
 #pro_list {
   display: flex;
   flex-direction: row;
@@ -140,18 +166,22 @@ footer a {
   margin: 0px;
   overflow-x: scroll;
 }
+
 .pro_list_item_image {
   width: 200px;
   height: 200px;
   display: block;
 }
-#pro_list div {
+
+#pro_list>div {
   border: 2px solid #7c7c7c;
 }
+
 footer {
   background-color: rgb(15, 20, 25);
   color: white;
 }
+
 footer div:nth-child(1) {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -160,9 +190,11 @@ footer div:nth-child(1) {
   font-size: 20px;
   background-color: rgb(30, 30, 30);
 }
+
 footer div:nth-child(1):hover {
   background-color: rgb(50, 50, 50);
 }
+
 #footer_info {
   display: flex;
   flex-direction: row;
@@ -173,12 +205,15 @@ footer div:nth-child(1):hover {
   align-items: top;
   color: white;
 }
+
 .cart_vis {
   left: 88.1vw;
 }
+
 .cart_inv {
   left: 100vw;
 }
+
 #cart {
   position: fixed;
   width: 12vw;
@@ -192,19 +227,24 @@ footer div:nth-child(1):hover {
   transition-duration: 0.2s;
   z-index: 3;
 }
+
 #cart-heading-div {
   width: 12vw;
   display: flex;
   justify-content: space-between;
 }
+
 main {
   width: 100vw;
   transition-property: width;
   transition-duration: 0.2s;
+  margin-top: 60px;
 }
+
 .main_size_mod {
   width: 88.1vw;
 }
+
 #total-amount-div {
   display: flex;
   justify-content: space-around;
@@ -212,11 +252,13 @@ main {
   margin: 10px auto;
   border-bottom: 4px solid white;
 }
+
 .ani_for_cats {
   animation-name: ani;
   animation-duration: 2.2s;
   animation-timing-function: linear;
 }
+
 #overlay {
   width: 100vw;
   height: 100vh;
@@ -227,49 +269,122 @@ main {
   left: 0px;
   display: none;
 }
+
 .all_cards {
   border-radius: 11px;
+  min-width: 200px;
+  margin: 15px;
 }
-.all_cards > p {
+
+.card-in-search-result {
+  border-radius: 11px;
+  min-width: 200px;
+  margin: 15px;
+  width: 450px;
+  border: 2px solid #7c7c7c;
+}
+
+.card-in-search-result img {
+  width: 248px;
+  height: 248px;
+}
+
+.all_cards>p {
   padding: 0 10px;
 }
+
+.card-in-search-result {
+  display: flex;
+  gap: 20px;
+}
+
+#search-result-div {
+  background-color: var(--backgroundGray);
+  color: white;
+}
+
+.product-details-div {
+  min-width: 130px;
+}
+
+.product-category {
+  margin-bottom: 40px;
+}
+
 @media screen and (max-width: 1390px) {
   #all_categories_cont div {
     width: 23.3vw;
   }
+
   #all_categories_cont div:nth-child(1) {
     width: 46.6vw;
   }
 }
+
 @media screen and (max-width: 1300px) {
   #The_features {
     width: 1040px;
   }
 }
+
 @media screen and (max-width: 1160px) {
   #all_categories_cont {
     grid-template-columns: auto auto;
   }
 }
+
 @media screen and (max-width: 600px) {
   #cart {
     width: 30vw;
   }
+
   .cart_vis {
     left: 70vw;
   }
+
   #cart-heading-div {
     width: 30vw;
   }
+
   .cart_item_cls {
     width: 29.5vw;
   }
+
   .cart_item_cls img {
     width: 29.3vw;
   }
-  /* .search_but {
-    width: 35px;
-    text-align: center;
-    padding: 0;
-  } */
+}
+
+@media screen and (max-width: 475px) {
+  #search-result-div .card-in-search-result {
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+  }
+
+  #search-result-div .product-image-div {
+    width: 55%;
+    display: flex;
+    align-items: center;
+  }
+
+  #search-result-div .pro_list_item_image {
+    width: 100%;
+    height: auto;
+  }
+
+  #search-result-div .item-buttons-in-product-list {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  #search-result-div span {
+    display: none;
+  }
+
+  #search-result-div .product-category {
+    margin-bottom: 20px;
+    color: #a0a0a0;
+  }
 }

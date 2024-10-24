@@ -2,6 +2,7 @@ let xhr = new XMLHttpRequest();
 let cart = [];
 total = 0;
 flag = 0; //Flag is used for responsiveness, it will be set to 1 when width<1160 and used when the width is between 1160 and 12
+let respObject;
 $("#cart").css("height", `${window.innerHeight - 60}px`);
 window.addEventListener("resize", heightSetter);
 function heightSetter() {
@@ -9,7 +10,8 @@ function heightSetter() {
 }
 xhr.open("GET", "List.json", true);
 xhr.onload = function () {
-  let respObject = JSON.parse(xhr.responseText);
+  respObject = JSON.parse(xhr.responseText);
+  featuredItemsRandomizer(respObject);
   for (let i in respObject) {
     if (localStorage.getItem("cartItems")) {
       cart = JSON.parse(localStorage.getItem("cartItems"));
@@ -20,42 +22,9 @@ xhr.onload = function () {
       };
       cart.push(arr_obj);
     }
-    const card = document.createElement("div");
-    $("#pro_list")[0].appendChild(card);
-    card.style.minWidth = "200px";
-    card.style.margin = "15px";
-    $(card).addClass("buy_btn_present");
+    const card = cardGenerator(i);
     $(card).addClass("all_cards");
-    const productImg = document.createElement("img");
-    productImg.setAttribute("src", `${respObject[i].img}`);
-    productImg.classList.add("pro_list_item_image");
-    productImg.addEventListener("dblclick", () => {
-      location = `./individualItemPage/index.html?${i}`;
-    });
-    card.appendChild(productImg);
-    const productName = document.createElement("p");
-    productName.innerText = `Name: ${respObject[i].name}`;
-    productName.style.marginTop = "12px";
-    card.appendChild(productName);
-    const ele_price = document.createElement("p");
-    ele_price.innerText = `Price: ₹${respObject[i].price}`;
-    card.appendChild(ele_price);
-    const elementCategory = document.createElement("p");
-    elementCategory.innerText = `Category: ${respObject[i].category}`;
-    elementCategory.style.marginBottom = "40px";
-    card.appendChild(elementCategory);
-    const infoButton = document.createElement("button");
-    infoButton.classList.add("btn");
-    infoButton.classList.add("btn-outline-info");
-    infoButton.classList.add("item-buttons-in-product-list");
-    infoButton.style.display = "block";
-    infoButton.innerText = "More details";
-    infoButton.addEventListener("click", () => {
-      location = `./individualItemPage/index.html?${i}`;
-    });
-    card.appendChild(infoButton);
-    const addToCartButton = addToCartButtonGenerator();
-    card.appendChild(addToCartButton);
+    $("#pro_list")[0].appendChild(card);
   }
   for (let i = 0; i < cart.length; i++) {
     let qtyBoxInProductList;
@@ -71,19 +40,77 @@ xhr.onload = function () {
   cartItemsRenderer();
   setTimeout(() => window.scrollTo(0, 0), 10); //be at the top when document loads
 };
+xhr.onerror = function () {
+  for (i = 0; i <= 2; i++) {
+    $(".featured-item")[i].innerText = "Error getting data";
+    $(".featured-item")[i].style.display = "flex";
+    $(".featured-item")[i].style.justifyContent = "center";
+    $(".featured-item")[i].style.alignItems = "center";
+  }
+};
+function cardGenerator(i) {
+  const card = document.createElement("div");
+  const productDetailsDiv = document.createElement("div");
+  productDetailsDiv.classList.add("product-details-div");
+  $(card).addClass("buy_btn_present");
+  const productImgDiv = document.createElement("div");
+  productImgDiv.classList.add("product-image-div");
+  const productImg = document.createElement("img");
+  productImg.setAttribute("src", `${respObject[i].img}`);
+  productImg.classList.add("pro_list_item_image");
+  productImg.addEventListener("dblclick", () => {
+    location = `./individualItemPage/index.html?${i}`;
+  });
+  productImgDiv.appendChild(productImg);
+  card.appendChild(productImgDiv);
+  const productName = $(`<p><span>Name:</span> ${respObject[i].name}</p>`);
+  productName.css("margin-top", "12px");
+  productDetailsDiv.appendChild(productName[0]);
+  const productPrice = document.createElement("p");
+  productPrice.innerText = `₹${respObject[i].price}`;
+  productDetailsDiv.appendChild(productPrice);
+  productPrice.style.fontSize = "20px";
+  const elementCategory = document.createElement("p");
+  elementCategory.innerHTML = `<span>Category:</span> ${respObject[i].category}`;
+
+  elementCategory.classList.add("product-category");
+  productDetailsDiv.appendChild(elementCategory);
+  const infoButton = document.createElement("button");
+  infoButton.classList.add("btn");
+  infoButton.classList.add("btn-outline-info");
+  infoButton.classList.add("item-buttons-in-product-list");
+  infoButton.style.display = "block";
+  infoButton.innerText = "More details";
+  infoButton.addEventListener("click", () => {
+    location = `./individualItemPage/index.html?${i}`;
+  });
+  productDetailsDiv.appendChild(infoButton);
+  const addToCartButton = addToCartButtonGenerator();
+  productDetailsDiv.appendChild(addToCartButton);
+  card.appendChild(productDetailsDiv);
+  return card;
+}
 function firstItemHandler(e) {
   let all_cards = document.getElementsByClassName("all_cards");
   let i = 0;
+  let addToCartButton = e.target;
+  console.log("e.target is", addToCartButton);
+  console.log("e.target parent", $(addToCartButton).parent());
   for (i in all_cards)
     if (
       document.getElementsByClassName("all_cards")[i] ===
-      $(e.target).parent()[0]
+      $(addToCartButton).parent().parent()[0]
     )
       break;
-  e.target.remove();
+  addToCartButton.remove();
+  console.log("The value of i is", i);
   let new_qty_box = generateInputBoxInItemList(1);
   let item_box = document.getElementsByClassName("all_cards")[i];
-  item_box.appendChild(new_qty_box);
+  let itemBoxDetails = item_box.getElementsByClassName(
+    "product-details-div"
+  )[0];
+  console.log(item_box);
+  itemBoxDetails.appendChild(new_qty_box);
   item_box.classList.remove("buy_btn_present");
   item_box.classList.add("buy_btn_absent");
   cart[i].quantity = 1;
@@ -120,8 +147,10 @@ function valueIs0(event) {
         console.log("new", all_cards[i].getElementsByTagName("input")[0]);
         all_cards[i].getElementsByTagName("input")[0].remove();
         const but = addToCartButtonGenerator();
-        all_cards[i].appendChild(but);
-        all_cards[i].getElementsByTagName("div")[0].remove();
+        all_cards[i]
+          .getElementsByClassName("product-details-div")[0]
+          .appendChild(but);
+        all_cards[i].getElementsByTagName("div")[1].remove();
         cart[i].quantity = 0;
       }
     }
@@ -148,9 +177,7 @@ function cartUpdater(event) {
     if (all_cards[i].getElementsByTagName("input").length !== 0) {
       //Only the elements that have quantity field present would be able to enter
       let inp_field = all_cards[i].getElementsByTagName("input")[0];
-      if (inp_field === event.target)
-        //This tells us the value of i in className at which the card is present in which the event occured
-        cart[i].quantity = event.target.value;
+      if (inp_field === event.target) cart[i].quantity = event.target.value;
     }
   }
   cartItemsRenderer();
@@ -211,15 +238,15 @@ function cartItemsRenderer() {
         for (i in cart) {
           if (cart[i].item.name === prod_name) break;
         }
-        all_cards[i]
-          .getElementsByTagName("div")[0]
-          .getElementsByTagName("input")[0].value = e.target.value;
+        all_cards[i].getElementsByTagName("input")[0].value = e.target.value;
         cart[i].quantity = e.target.value;
         if (e.target.value === "0" || e.target.value === "") {
           $(e.target).parent()[0].remove();
-          all_cards[i].getElementsByTagName("div")[0].remove();
+          all_cards[i].getElementsByTagName("div")[1].remove();
           but = addToCartButtonGenerator();
-          all_cards[i].appendChild(but);
+          all_cards[i]
+            .getElementsByClassName("product-details-div")[0]
+            .appendChild(but);
           cart[i].quantity = 0;
         }
         total = totalCostCalculatonAndLocalStorage();
@@ -279,46 +306,39 @@ function responsive() {
   if (window.innerWidth > 600) {
     console.log($("#all_categories_cont")[0].clientWidth);
     if ($("#cart")[0].classList[0] === "cart_vis") {
-      $("#all_categories_cont")[0].style.width = `${
-        0.8 * window.innerWidth * 0.881
-      }px`;
+      $("#all_categories_cont")[0].style.width = `${0.8 * window.innerWidth * 0.881
+        }px`;
       $("#main").addClass("main_size_mod");
       for (i = 1; i < $("#all_categories_cont div").length; i++) {
-        $("#all_categories_cont div")[i].style.width = `${
-          0.31 * 0.8 * window.innerWidth * 0.881
-        }px`; //What I am doing here is that initially the width of all_categories_cont is 75vw, but when the cart is open I want it to become 80vw, so it the categories div's have to be adjusted in the same proportion.
+        $("#all_categories_cont div")[i].style.width = `${0.31 * 0.8 * window.innerWidth * 0.881
+          }px`; //What I am doing here is that initially the width of all_categories_cont is 75vw, but when the cart is open I want it to become 80vw, so it the categories div's have to be adjusted in the same proportion.
         //So I caclulated what is the width of each div with respect to the all_categories_cont and the 23.3%(initially the width was calculated with respect to main) of main width comes out to be 31% of all_categories_cont. Mathematically, 23.3*100/75=31.0 as the all_cont_div is initially set to 75vw.
         //This is required as when the cart is visible the all_categories_cont is made 80% of main width instead of 75% so the categories take more space than initial.
         //I am doing all this as when the cart is visible then 75% width seems to utilize less space for contenet an more space is left vacant
       }
-      $("#all_categories_cont div:nth-child(1)")[0].style.width = `${
-        0.31 * 0.8 * window.innerWidth * 0.881 * 2
-      }px`;
-      $("#The_features")[0].style.width = `${
-        0.85 * window.innerWidth * 0.881
-      }px`; //window.innerWidth*0.881 =main's width)
+      $("#all_categories_cont div:nth-child(1)")[0].style.width = `${0.31 * 0.8 * window.innerWidth * 0.881 * 2
+        }px`;
+      $("#The_features")[0].style.width = `${0.85 * window.innerWidth * 0.881
+        }px`; //window.innerWidth*0.881 =main's width)
       if (window.innerWidth <= 1260 && window.innerWidth >= 1180) {
-        for (i = 0; i < $(".Featured-item").length; i++) {
-          $(".Featured-item")[i].style.width = `${
-            300 - (1260 - window.innerWidth) / 3
-          }px`;
+        for (i = 0; i < $(".featured-item").length; i++) {
+          $(".featured-item")[i].style.width = `${300 - (1260 - window.innerWidth) / 3
+            }px`;
         }
       } else if (window.innerWidth > 1260) {
         //Assuming when the screen size is greater than 1260
-        for (i = 0; i < $(".Featured-item").length; i++) {
-          $(".Featured-item")[i].style.width = "300px";
+        for (i = 0; i < $(".featured-item").length; i++) {
+          $(".featured-item")[i].style.width = "300px";
         }
       }
       if (window.innerWidth <= 1160) {
         flag = 1;
         for (i = 1; i <= 4; i++) {
-          $("#all_categories_cont div")[i].style.width = `${
-            $("#all_categories_cont")[0].clientWidth / 2 - 50
-          }px`;
+          $("#all_categories_cont div")[i].style.width = `${$("#all_categories_cont")[0].clientWidth / 2 - 50
+            }px`;
         }
-        $("#all_categories_cont div:nth-child(1)")[0].style.width = `${
-          $("#all_categories_cont")[0].clientWidth - 50
-        }px`;
+        $("#all_categories_cont div:nth-child(1)")[0].style.width = `${$("#all_categories_cont")[0].clientWidth - 50
+          }px`;
         $("#The_features")[0].style.width = "928px";
         $("#The_features").parent()[0].style.overflowX = "scroll";
       }
@@ -332,27 +352,23 @@ function responsive() {
         $("#all_categories_cont")[0].style.transitionDuration = "0s";
       }
       for (i = 1; i < $("#all_categories_cont div").length; i++) {
-        $("#all_categories_cont div")[i].style.width = `${
-          0.233 * window.innerWidth
-        }px`;
+        $("#all_categories_cont div")[i].style.width = `${0.233 * window.innerWidth
+          }px`;
       }
-      $("#all_categories_cont div:nth-child(1)")[0].style.width = `${
-        0.233 * window.innerWidth * 2
-      }px`;
-      $("#all_categories_cont")[0].style.width = `${
-        0.75 * window.innerWidth
-      }px`;
+      $("#all_categories_cont div:nth-child(1)")[0].style.width = `${0.233 * window.innerWidth * 2
+        }px`;
+      $("#all_categories_cont")[0].style.width = `${0.75 * window.innerWidth
+        }px`;
       $("#The_features")[0].style.width = `${0.8 * window.innerWidth}px`;
       if (window.innerWidth <= 1210 && window.innerWidth >= 1130) {
-        for (i = 0; i < $(".Featured-item").length; i++) {
-          $(".Featured-item")[i].style.width = `${
-            300 - (1210 - window.innerWidth) / 3
-          }px`;
+        for (i = 0; i < $(".featured-item").length; i++) {
+          $(".featured-item")[i].style.width = `${300 - (1210 - window.innerWidth) / 3
+            }px`;
         }
       } else if (window.innerWidth > 1210) {
         //Assuming when the screen size is greater than 1210
-        for (i = 0; i < $(".Featured-item").length; i++) {
-          $(".Featured-item")[i].style.width = "300px";
+        for (i = 0; i < $(".featured-item").length; i++) {
+          $(".featured-item")[i].style.width = "300px";
         }
       }
       for (
@@ -367,12 +383,10 @@ function responsive() {
       //For the first section, featured items
       flag = 1;
       for (i = 1; i <= 4; i++)
-        $("#all_categories_cont div")[i].style.width = `${
-          $("#all_categories_cont")[0].clientWidth / 2 - 50
+        $("#all_categories_cont div")[i].style.width = `${$("#all_categories_cont")[0].clientWidth / 2 - 50
+          }px`;
+      $("#all_categories_cont div:nth-child(1)")[0].style.width = `${$("#all_categories_cont")[0].clientWidth - 50
         }px`;
-      $("#all_categories_cont div:nth-child(1)")[0].style.width = `${
-        $("#all_categories_cont")[0].clientWidth - 50
-      }px`;
       $("#The_features")[0].style.width = "928px";
       $("#The_features").parent()[0].style.overflowX = "scroll";
     }
@@ -385,9 +399,8 @@ function responsive() {
       $("#tech_img")[0].style.width = "200px";
       $("#tech_img").siblings()[0].style.width = "125px";
       for (i = 0; i < $("#all_categories_cont div").length; i++)
-        $("#all_categories_cont div")[i].style.width = `${
-          $("#all_categories_cont")[0].clientWidth - 50
-        }px`;
+        $("#all_categories_cont div")[i].style.width = `${$("#all_categories_cont")[0].clientWidth - 50
+          }px`;
     } else if (window.innerWidth <= 911) {
       if (
         $("main")[0].clientWidth === window.innerWidth &&
@@ -402,9 +415,8 @@ function responsive() {
         $("#tech_img")[0].style.width = "200px";
         // $("#tech_img").siblings()[0].style.width = "125px";
         for (i = 0; i < $("#all_categories_cont div").length; i++)
-          $("#all_categories_cont div")[i].style.width = `${
-            0.8 * window.innerWidth * 0.881 - 50
-          }px`;
+          $("#all_categories_cont div")[i].style.width = `${0.8 * window.innerWidth * 0.881 - 50
+            }px`;
       } else if (
         $("main")[0].clientWidth !== window.innerWidth &&
         $("#cart")[0].classList[0] === "cart_inv"
@@ -422,9 +434,8 @@ function responsive() {
         //Implies the cart is visible
         $("#all_categories_cont")[0].style.display = "block";
         for (i = 0; i < $("#all_categories_cont div").length; i++)
-          $("#all_categories_cont div")[i].style.width = `${
-            0.8 * window.innerWidth * 0.881 - 50
-          }px`;
+          $("#all_categories_cont div")[i].style.width = `${0.8 * window.innerWidth * 0.881 - 50
+            }px`;
         $("#tech_img")[0].setAttribute(
           "src",
           "Images/Categories/Tech_cat_for_phone.png"
@@ -448,13 +459,11 @@ function responsive() {
       "src",
       "Images/Categories/Tech_cat_for_phone.png"
     );
-    $("#all_categories_cont")[0].style.width = `${
-      0.9 * window.innerWidth * 0.9
-    }px`;
-    for (i = 0; i < $("#all_categories_cont div").length; i++)
-      $("#all_categories_cont div")[i].style.width = `${
-        $("#all_categories_cont")[0].clientWidth - 50
+    $("#all_categories_cont")[0].style.width = `${0.9 * window.innerWidth * 0.9
       }px`;
+    for (i = 0; i < $("#all_categories_cont div").length; i++)
+      $("#all_categories_cont div")[i].style.width = `${$("#all_categories_cont")[0].clientWidth - 50
+        }px`;
     $("#The_features").parent()[0].style.overflowX = "scroll";
     $("main")[0].classList.remove("main_size_mod");
   }
@@ -463,6 +472,28 @@ function responsive() {
     $("#overlay")[0].style.display = "block";
   } else {
     $("#overlay")[0].style.display = "none";
+  }
+}
+function featuredItemsRandomizer(allItemsObjectsArr) {
+  const randomIndexSet = new Set();
+  while (randomIndexSet.size !== 3) {
+    randomIndexSet.add(
+      Math.floor(Math.random() * Object.keys(allItemsObjectsArr).length) + 1
+    );
+  }
+  const randomIndexArr = Array.from(randomIndexSet);
+  randomIndexArr.sort(); //Will work correctly only till products are <10 as the function sorts alphabatecally
+  for (i = 0; i <= 2; i++) {
+    const currObjFromRandomArray =
+      allItemsObjectsArr[`Product${randomIndexArr[i]}`];
+    const currFeaturedDivChildren = $(".featured-item")[i].children;
+    currFeaturedDivChildren[0].setAttribute("src", currObjFromRandomArray.img);
+    currFeaturedDivChildren[0].style.visibility = "visible";
+    currFeaturedDivChildren[1].innerText = currObjFromRandomArray.name;
+    currFeaturedDivChildren[2].innerText = `₹${currObjFromRandomArray.price}`;
+    currFeaturedDivChildren[3].getElementsByTagName(
+      "button"
+    )[0].style.visibility = "visible";
   }
 }
 window.addEventListener("resize", responsive);
