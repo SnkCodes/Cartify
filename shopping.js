@@ -31,7 +31,7 @@ xhr.onload = function () {
     if (cart[i]?.quantity > 0) {
       qtyBoxInProductList = generateInputBoxInItemList(cart[i].quantity);
       let itemCard = $(".all_cards")[i];
-      itemCard.appendChild(qtyBoxInProductList);
+      itemCard.getElementsByClassName("product-details-div")[0].appendChild(qtyBoxInProductList);
       itemCard.classList.remove("buy_btn_present");
       itemCard.classList.add("buy_btn_absent");
       itemCard.getElementsByTagName("button")[1].remove();
@@ -150,7 +150,7 @@ function valueIs0(event) {
         all_cards[i]
           .getElementsByClassName("product-details-div")[0]
           .appendChild(but);
-        all_cards[i].getElementsByTagName("div")[1].remove();
+        all_cards[i].getElementsByTagName("div")[1].getElementsByTagName("div")[0].remove();
         cart[i].quantity = 0;
       }
     }
@@ -242,7 +242,7 @@ function cartItemsRenderer() {
         cart[i].quantity = e.target.value;
         if (e.target.value === "0" || e.target.value === "") {
           $(e.target).parent()[0].remove();
-          all_cards[i].getElementsByTagName("div")[1].remove();
+          all_cards[i].getElementsByTagName("div")[1].getElementsByTagName("div")[0].remove();
           but = addToCartButtonGenerator();
           all_cards[i]
             .getElementsByClassName("product-details-div")[0]
